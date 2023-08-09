@@ -27,4 +27,4 @@ COPY --chown=ansible:ansible ./playbook/ /work
 
 RUN echo "$BUILD_VERSION" > /version.txt
 
-ENTRYPOINT [ "/ansible/entrypoint" ]
+ENTRYPOINT [ "/work/entrypoint" ]
