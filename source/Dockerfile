@@ -4,7 +4,7 @@ RUN addgroup -g 1000 ansible && \
   adduser -u 1000 -G ansible -h /work -D ansible && \
   mkdir -p /work /work/terraform && \
   chmod 775 /work && \
-  chown ansible:ansible /work
+  chown ansible:ansible -R /work
 
 RUN apk add python3 bash && python3 -m ensurepip
 
