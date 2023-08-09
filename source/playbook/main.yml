@@ -11,6 +11,7 @@
         content: "{{ terraform_file.content }}"
         dest: "/work/terraform/{{ terraform_file.name }}"
         mode: "0775"
+      check_mode: false
       loop: "{{ terraform_config[terraform_component].template_files | default([]) }}"
       loop_control:
         loop_var: terraform_file
