@@ -1,0 +1,6 @@
+[submodule "exec"]
+	path = exec
+	url = https://github.com/archmachina/cicd-exec
+[submodule "source/playbook/exec"]
+	path = source/playbook/exec
+	url = https://github.com/archmachina/cicd-exec

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Global settings
+SCRIPT=$(readlink -f "${0}")
+DIR=$(dirname "${SCRIPT}")
+set -o pipefail
+
+# Ensure we start from the playbook directory
+cd "${DIR}" || exit 1
+
+# Don't install dependencies. These should have been done as part of the docker build
+export ANSIBLE_INSTALL_DEPS=0
+
+# exec the playbook
+exec ./exec/exec ansible_playbook ./main.yml "$@"
+
+# Shouldn't get here, so fail if it does
+exit 1

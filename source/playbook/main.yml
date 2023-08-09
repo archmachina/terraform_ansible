@@ -1,0 +1,74 @@
+---
+
+- hosts: localhost
+  connection: local
+  any_errors_fatal: true
+  environment: "{{ terraform_config[terraform_component].environment_vars | default({}) }}"
+  tasks:
+    # Generate templates for terraform
+    - name: Template Terraform files
+      ansible.builtin.copy:
+        content: "{{ terraform_file.content }}"
+        dest: "/work/{{ terraform_file.name }}"
+        mode: "0775"
+      loop: "{{ terraform_config[terraform_component].template_files | default([]) }}"
+      loop_control:
+        loop_var: terraform_file
+
+    - when: terraform_init | default(true) | bool
+      block:
+        - name: "Run Terraform Init"
+          ansible.builtin.command:
+            chdir: /work
+            cmd: >-
+              terraform init -no-color
+              {% if terraform_config[terraform_component].backend_config_file | default('') != '' %}
+              --backend-config={{ terraform_config[terraform_component].backend_config_file }}
+              {% endif %}
+              {% if terraform_init_reconfigure | default(false) | bool %} -reconfigure {% endif %}
+          register: terraform_register_init
+          check_mode: false
+
+        - name: Terraform init output
+          debug:
+            msg: "{{ terraform_register_init.stdout.split('\n') }}"
+
+    - when: terraform_plan | default(true) | bool
+      block:
+        - name: "Run Terraform Plan"
+          ansible.builtin.command:
+            chdir: /work
+            cmd: >-
+              terraform plan -no-color
+              {% if terraform_config[terraform_component].plan_file | default('') != '' %}
+              -out {{ terraform_config[terraform_component].plan_file }}
+              {% endif %}
+              {% for filename in terraform_config[terraform_component].vars_files | default([]) %}
+              -var-file={{ filename }}
+              {% endfor %}
+          register: terraform_register_plan
+          check_mode: false
+
+        - name: Terraform plan output
+          debug:
+            msg: "{{ terraform_register_plan.stdout.split('\n') }}"
+
+    - when: terraform_apply | default(true) | bool
+      block:
+        - name: "Run Terraform Apply"
+          ansible.builtin.command:
+            chdir: /work
+            cmd: >-
+              terraform apply -no-color -auto-approve
+              {% if terraform_config[terraform_component].plan_file | default('') != '' %}
+              {{ terraform_config[terraform_component].plan_file }}
+              {% else %}
+              {% for filename in terraform_config[terraform_component].vars_files | default([]) %}
+              -var-file={{ filename }}
+              {% endfor %}
+              {% endif %}
+          register: terraform_register_apply
+
+        - name: Terraform apply output
+          debug:
+            msg: "{{ terraform_register_apply.stdout.split('\n') }}"
