@@ -1,15 +1,15 @@
 FROM hashicorp/terraform:1.5.4
 
 RUN addgroup -g 1000 ansible && \
-  adduser -u 1000 -G ansible -h /ansible -D ansible && \
-  mkdir -p /ansible /work && \
-  chmod 775 /ansible /work && \
-  chown ansible:ansible /ansible /work
+  adduser -u 1000 -G ansible -h /work -D ansible && \
+  mkdir -p /work /work/terraform && \
+  chmod 775 /work && \
+  chown ansible:ansible /work
 
 RUN apk add python3 bash && python3 -m ensurepip
 
 WORKDIR /work
-ENV HOME /ansible
+ENV HOME /work
 
 ARG BUILD_VERSION
 RUN touch /version.txt && \
@@ -19,11 +19,11 @@ RUN touch /version.txt && \
 USER 1000:1000
 
 COPY --chown=ansible:ansible "./playbook/requirements.txt" "./playbook/requirements.yml" \
-  "./playbook/ansible.cfg"  /ansible/
-COPY --chown=ansible:ansible ./playbook/exec/ /ansible/exec/
-RUN /ansible/exec/exec ansible_setup /ansible
+  "./playbook/ansible.cfg"  /work/
+COPY --chown=ansible:ansible ./playbook/exec/ /work/exec/
+RUN /work/exec/exec ansible_setup /work
 
-COPY --chown=ansible:ansible ./playbook/ /ansible
+COPY --chown=ansible:ansible ./playbook/ /work
 
 RUN echo "$BUILD_VERSION" > /version.txt
 

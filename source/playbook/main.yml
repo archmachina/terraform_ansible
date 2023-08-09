@@ -9,7 +9,7 @@
     - name: Template Terraform files
       ansible.builtin.copy:
         content: "{{ terraform_file.content }}"
-        dest: "/work/{{ terraform_file.name }}"
+        dest: "/work/terraform/{{ terraform_file.name }}"
         mode: "0775"
       loop: "{{ terraform_config[terraform_component].template_files | default([]) }}"
       loop_control:
@@ -19,7 +19,7 @@
       block:
         - name: "Run Terraform Init"
           ansible.builtin.command:
-            chdir: /work
+            chdir: /work/terraform
             cmd: >-
               terraform init -no-color
               {% if terraform_config[terraform_component].backend_config_file | default('') != '' %}
@@ -37,7 +37,7 @@
       block:
         - name: "Run Terraform Plan"
           ansible.builtin.command:
-            chdir: /work
+            chdir: /work/terraform
             cmd: >-
               terraform plan -no-color
               {% if terraform_config[terraform_component].plan_file | default('') != '' %}
@@ -57,7 +57,7 @@
       block:
         - name: "Run Terraform Apply"
           ansible.builtin.command:
-            chdir: /work
+            chdir: /work/terraform
             cmd: >-
               terraform apply -no-color -auto-approve
               {% if terraform_config[terraform_component].plan_file | default('') != '' %}
