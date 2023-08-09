@@ -10,13 +10,13 @@ SCRIPT_DIR=$(dirname "${SCRIPT_PATH}")
 VERSION_SOURCES="$GITHUB_REF"
 
 # Docker Hub information
-DOCKER_IMAGE="archmachina/terraform-ansible"
+DOCKER_IMAGE="archmachina/terraform_ansible"
 DOCKER_USERNAME="archmachina"
 DOCKER_HOST="docker.io"
 
 # GitHub repo information
 GITHUB_OWNER=archmachina
-GITHUB_REPO=docker-terraform-ansible
+GITHUB_REPO=deploy-terraform_ansible
 
 # shellcheck disable=SC1091
 . "${SCRIPT_DIR}/exec/exec_functions"
