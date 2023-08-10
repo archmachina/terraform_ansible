@@ -56,7 +56,9 @@ while [ "$1" != "" ] ; do
 
   case "$COMMAND" in
     build)
-      IMAGE=$(assert docker build --build-arg BUILD_VERSION="${BUILD_VERSION}" -f ./source/Dockerfile -q ./source)
+      BUILD_ARGS="--build-arg BUILD_VERSION=\"\${BUILD_VERSION}\""
+      assert sh -c "docker build $BUILD_ARGS -f ./source/Dockerfile ./source"
+      IMAGE=$(assert sh -c "docker build $BUILD_ARGS -f ./source/Dockerfile -q ./source")
       echo "$IMAGE"
       ;;
 
