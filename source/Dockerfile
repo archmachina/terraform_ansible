@@ -7,7 +7,7 @@ RUN addgroup -g 1000 ansible && \
   chown ansible:ansible -R /work
 
 # hadolint ignore=DL3018
-RUN apk add python3 bash gcc python3-dev build-base linux-headers && python3 -m ensurepip
+RUN apk add python3 bash gcc python3-dev gcc linux-headers && python3 -m ensurepip
 
 WORKDIR /work
 ENV HOME /work
