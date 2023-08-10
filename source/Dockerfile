@@ -6,7 +6,7 @@ RUN addgroup -g 1000 ansible && \
   chmod 775 /work && \
   chown ansible:ansible -R /work
 
-RUN apk add python3 bash && python3 -m ensurepip
+RUN apk add python3 bash gcc && python3 -m ensurepip
 
 WORKDIR /work
 ENV HOME /work
