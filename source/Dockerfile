@@ -1,4 +1,4 @@
-FROM hashicorp/terraform:1.5.4
+FROM hashicorp/terraform:1.5.5
 
 RUN addgroup -g 1000 ansible && \
   adduser -u 1000 -G ansible -h /work -D ansible && \
