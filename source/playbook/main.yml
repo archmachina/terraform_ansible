@@ -20,6 +20,7 @@
       block:
         - name: "Run Terraform Init"
           ansible.builtin.command:
+            stdin: /dev/null
             chdir: /work/terraform
             cmd: >-
               terraform init -no-color
@@ -38,6 +39,7 @@
       block:
         - name: "Run Terraform Plan"
           ansible.builtin.command:
+            stdin: /dev/null
             chdir: /work/terraform
             cmd: >-
               terraform plan -no-color
@@ -58,6 +60,7 @@
       block:
         - name: "Run Terraform Apply"
           ansible.builtin.command:
+            stdin: /dev/null
             chdir: /work/terraform
             cmd: >-
               terraform apply -no-color -auto-approve
