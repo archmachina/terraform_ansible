@@ -1,4 +1,4 @@
-requests==2.28.2
+requests==2.31.0
 ansible-core==2.15.2
 jmespath==0.10.0
 azure-cli==2.51.0
